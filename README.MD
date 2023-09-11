@@ -22,10 +22,7 @@
 ## 📒 Table of Contents
 - [📍 Overview](#-overview)
 - [🚀 Getting Started](#-getting-started)
-- [🗺 Roadmap](#-roadmap)
 - [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-- [👏 Acknowledgments](#-acknowledgments)
 
 ---
 
