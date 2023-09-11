@@ -91,9 +91,10 @@ The project is focused on provisioning and configuring Kubernetes controller and
 ### ✔️ Prerequisites
 
 Before you begin, ensure that you have the following prerequisites installed:
-> - `ℹ️ Requirement 1`
-> - `ℹ️ Requirement 2`
-> - `ℹ️ ...`
+> - `Terraform` - [Download & Install Terraform](https://www.terraform.io/downloads.html).<br>
+> - `Proxmox` - [Download & Install Proxmox](https://www.proxmox.com/en/downloads).<br>
+> - `Ubuntu template for proxmox (20.04)` - [Download & Install Ubuntu template for proxmox](https://pve.proxmox.com/wiki/Downloads).<br>
+
 
 ### 📦 Installation
 
