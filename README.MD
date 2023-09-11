@@ -116,26 +116,13 @@ cd k8s
 terraform init
 ```
 
+4. Modify the configurations in the `prof.tfvars` file
+
 ### 🎮 Using k8s
 
 ```sh
-terraform apply
+terraform apply -var-file="configurations/prod.tfvars"
 ```
-
-### 🧪 Running Tests
-```sh
-Insert test command.
-```
-
----
-
-
-## 🗺 Roadmap
-
-> - [X] `ℹ️  Task 1: Implement X`
-> - [ ] `ℹ️  Task 2: Refactor Y`
-> - [ ] `ℹ️ ...`
-
 
 ---
 
@@ -159,17 +146,5 @@ git push origin new-feature-branch
 ```
 7. Create a new pull request to the original project repository. In the pull request, describe the changes you've made and why they're necessary.
 The project maintainers will review your changes and provide feedback or merge them into the main branch.
-
----
-
-## 📄 License
-
-This project is licensed under the `ℹ️  INSERT-LICENSE-TYPE` License. See the [LICENSE](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository) file for additional info.
-
----
-
-## 👏 Acknowledgments
-
-> - `ℹ️  List any resources, contributors, inspiration, etc.`
 
 ---
