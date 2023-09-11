@@ -113,7 +113,7 @@ cd k8s
 terraform init
 ```
 
-4. Modify the configurations in the `prof.tfvars` file
+4. Modify the configurations in the `prod.tfvars` file
 
 ### 🎮 Using k8s
 
