@@ -1,7 +1,7 @@
 <div align="center">
 <h1 align="center">
 <img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-markdown-open.svg" width="100" />
-<br>k8s
+<br>K8s - Kubernetes Cluster using Terraform and Proxmox
 </h1>
 <h3>◦ k8s: Scale your reach, code with ease!</h3>
 <h3>◦ Developed with the software and tools listed below.</h3>
