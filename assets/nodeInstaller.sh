@@ -2,10 +2,11 @@
 
 echo "🚀 Installation du nœud Kubernetes..."
 
-
+while ! (apt-get update); do sleep 1; done
 
 echo "📦 Installation des dépendances..."
 # Mise à jour du système
+while ! (apt-get update); do sleep 1; done
 sudo apt update
 sudo apt upgrade -y
 echo "✅ Mise à jour du système"
@@ -28,9 +29,11 @@ sudo apt install -y docker.io
 # kubelet est nécessaire pour rejoindre le cluster.
 # Assurez-vous que les versions correspondent à celles du contrôleur.
 echo "📦 Installation de kubeadm, kubelet et kubectl..."
+while ! (apt-get update); do sleep 1; done
 sudo apt install -y apt-transport-https curl
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+while ! (apt-get update); do sleep 1; done
 sudo apt update
 sudo apt install -y kubelet kubeadm kubectl
 echo "✅ Installation de kubeadm, kubelet et kubectl"
