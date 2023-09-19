@@ -5,8 +5,10 @@ echo "🚀 Installation du nœud Kubernetes..."
 while ! (apt-get update); do sleep 1; done
 
 echo "📦 Installation des dépendances..."
+
 # Mise à jour du système
 while ! (apt-get update); do sleep 1; done
+echo "$nrconf{restart} = 'a';" > /etc/needrestart/conf.d/nointeractive.conf
 sudo apt update
 sudo apt upgrade -y
 echo "✅ Mise à jour du système"

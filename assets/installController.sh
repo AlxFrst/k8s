@@ -13,6 +13,7 @@ fi
 echo "📦 Installation des dépendances..."
 
 # Mise à jour du système
+echo "$nrconf{restart} = 'a';" > /etc/needrestart/conf.d/nointeractive.conf
 while ! (apt-get update); do sleep 1; done
 sudo apt update
 sudo apt upgrade -y
