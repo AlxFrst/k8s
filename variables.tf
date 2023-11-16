@@ -13,12 +13,12 @@ variable "pm_bridge" {
   description = "Proxmox network bridge"
 }
 
-variable "vm_node_cores" {
+variable "node_cores" {
   type        = number
   description = "k8s node Virtual Machine Cores"
 }
 
-variable "vm_controller_cores" {
+variable "controller_cores" {
   type        = number
   description = "k8s controller Virtual Machine Cores"
 }
@@ -48,27 +48,27 @@ variable "pm_storage" {
   description = "Proxmox Storage"
 }
 
-variable "vm_controller_memory" {
+variable "controller_memory" {
   type        = string
   description = "k8s controller Virtual Machine Memory"
 }
 
-variable "vm_controller_disk_size" {
+variable "controller_disk_size" {
   type        = string
   description = "k8s controller Virtual Machine Disk Size"
 }
 
-variable "vm_node_count" {
+variable "node_count" {
   type        = number
   description = "k8s node Virtual Machine Count"
 }
 
-variable "vm_node_memory" {
+variable "node_memory" {
   type        = string
   description = "k8s node Virtual Machine Memory"
 }
 
-variable "vm_node_disk_size" {
+variable "vnode_disk_size" {
   type        = string
   description = "k8s node Virtual Machine Disk Size"
 }

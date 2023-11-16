@@ -1,15 +1,15 @@
 resource "proxmox_vm_qemu" "k8s_node" {
   depends_on = [ proxmox_vm_qemu.k8s_controller ]
-  count       = var.vm_node_count
+  count       = var.node_count
   name        = "${var.pm_vm_name_prefix}-node-${count.index + 1}"
   target_node = var.pm_node
   clone       = var.pm_template_name
   agent       = 1
   os_type     = "cloud-init"
-  cores       = var.vm_node_cores
+  cores       = var.node_cores
   sockets     = 1
   cpu         = "host"
-  memory      = var.vm_node_memory
+  memory      = var.node_memory
   scsihw      = "virtio-scsi-pci"
   ipconfig0   = "ip=dhcp"
   ciuser      = var.vm_user
@@ -17,7 +17,7 @@ resource "proxmox_vm_qemu" "k8s_node" {
   sshkeys     = var.ssh_publickey
   disk {
     slot    = 0
-    size    = var.vm_node_disk_size
+    size    = var.vnode_disk_size
     type    = "scsi"
     storage = var.pm_storage
   }

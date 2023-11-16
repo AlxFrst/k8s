@@ -13,13 +13,13 @@ vm_user     = "ubuntu"
 vm_password = "ubuntu"
 
 # Controller variables
-vm_controller_memory = "6144" # 2048MB this is the minimum required for k8s controller
-vm_controller_cores  = "3"    # 2 cores this is the minimum required for k8s controller
+controller_memory = "6144" # 2048MB this is the minimum required for k8s controller
+controller_cores  = "3"    # 2 cores this is the minimum required for k8s controller
 
 # Worker variables
-vm_node_count  = "4"
-vm_node_memory = "6144"
-vm_node_cores  = "3"
+node_count  = "4"
+node_memory = "6144"
+node_cores  = "3"
 
 # Credentials
 ssh_publickey  = "A GENERATED PUBLIC KEY"

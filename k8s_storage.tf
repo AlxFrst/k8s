@@ -1,15 +1,14 @@
-resource "proxmox_vm_qemu" "k8s_node" {
-  depends_on = [ proxmox_vm_qemu.k8s_controller ]
-  count       = var.vm_node_count
-  name        = "${var.pm_vm_name_prefix}-node-${count.index + 1}"
+resource "proxmox_vm_qemu" "k8s_storage" {
+  count       = 1
+  name        = "${var.pm_vm_name_prefix}-storage"
   target_node = var.pm_node
   clone       = var.pm_template_name
   agent       = 1
   os_type     = "cloud-init"
-  cores       = var.vm_node_cores
+  cores       = var.controller_cores
   sockets     = 1
   cpu         = "host"
-  memory      = var.vm_node_memory
+  memory      = var.controller_memory
   scsihw      = "virtio-scsi-pci"
   ipconfig0   = "ip=dhcp"
   ciuser      = var.vm_user
@@ -17,7 +16,7 @@ resource "proxmox_vm_qemu" "k8s_node" {
   sshkeys     = var.ssh_publickey
   disk {
     slot    = 0
-    size    = "70G"
+    size    = var.controller_disk_size
     type    = "scsi"
     storage = var.pm_storage
   }
@@ -27,6 +26,9 @@ resource "proxmox_vm_qemu" "k8s_node" {
     bridge = var.pm_bridge
   }
 
+  # share the assets folder with the VM
+
+
   provisioner "file" {
     connection {
       type        = "ssh"
@@ -34,8 +36,41 @@ resource "proxmox_vm_qemu" "k8s_node" {
       private_key = var.ssh_privatekey
       host        = self.ssh_host
     }
-    source      = "assets/nodeInstaller.sh"
-    destination = "/tmp/nodeInstaller.sh"
+    source      = "assets/installController.sh"
+    destination = "/tmp/installController.sh"
+  }
+
+  provisioner "file" {
+    connection {
+      type        = "ssh"
+      user        = var.vm_user
+      private_key = var.ssh_privatekey
+      host        = self.ssh_host
+    }
+    source      = "assets/metallb-namespace.yaml"
+    destination = "/tmp/metallb-namespace.yaml"
+  }
+
+  provisioner "file" {
+    connection {
+      type        = "ssh"
+      user        = var.vm_user
+      private_key = var.ssh_privatekey
+      host        = self.ssh_host
+    }
+    source      = "assets/metallb-config.yaml"
+    destination = "/tmp/metallb-config.yaml"
+  }
+
+  provisioner "file" {
+    connection {
+      type        = "ssh"
+      user        = var.vm_user
+      private_key = var.ssh_privatekey
+      host        = self.ssh_host
+    }
+    source      = "assets/gitlab-deployment.yaml"
+    destination = "/tmp/gitlab-deployment.yaml"
   }
 
   provisioner "remote-exec" {
@@ -46,21 +81,27 @@ resource "proxmox_vm_qemu" "k8s_node" {
       host        = self.ssh_host
     }
     inline = [
-      "chmod +x /tmp/nodeInstaller.sh",
-      "sudo /tmp/nodeInstaller.sh",
+      "chmod +x /tmp/installController.sh",
+      "sudo /tmp/installController.sh",
+      "sudo kubeadm token create --print-join-command > /tmp/joinCommand.sh",
 
-      # create the .ssh folder
-      "sudo mkdir -p /home/${var.vm_user}/.ssh",
-      "sudo chown -R ${var.vm_user}:${var.vm_user} /home/${var.vm_user}/.ssh",
-      "sudo chmod 700 /home/${var.vm_user}/.ssh",
-      "echo '${var.ssh_privatekey}' > /home/${var.vm_user}/.ssh/id_rsa",
-      "sed -i 's/\\n//g' /home/${var.vm_user}/.ssh/id_rsa", #remove this line if your private key is not on multiple lines
-      "sudo chmod 600 /home/${var.vm_user}/.ssh/id_rsa",
-  
-      # copy the join command from the controller to the node and execute it
-      "scp -o StrictHostKeyChecking=no -i /home/${var.vm_user}/.ssh/id_rsa ${var.vm_user}@${proxmox_vm_qemu.k8s_controller.0.ssh_host}:/tmp/joinCommand.sh /tmp/joinCommand.sh",
-      "sudo chmod +x /tmp/joinCommand.sh",
-      "sudo /tmp/joinCommand.sh",
+      # Install helm
+      "sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3",
+      "sudo bash get_helm.sh",
+
+      # Install metallb & configure metallb
+      "echo 'Installing metallb'",
+      "sudo kubectl apply -f /tmp/metallb-namespace.yaml",
+      "sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml",
+      "sudo sed -i 's/#RANGE#/${var.metallb_ip_range}/g' /tmp/metallb-config.yaml",
+      "sudo kubectl apply -f /tmp/metallb-config.yaml",
+
+      # Install gitlab
+      # change #EXTERNAL_URL# to the value of var.gitlab_external_url
+      "sudo sed -i 's/#EXTERNAL_URL#/${var.gitlab_external_url}/g' /tmp/gitlab-deployment.yaml",
+      "sudo kubectl apply -f /tmp/gitlab-deployment.yaml",
+      
     ]
   }
+
 }

@@ -5,10 +5,10 @@ resource "proxmox_vm_qemu" "k8s_controller" {
   clone       = var.pm_template_name
   agent       = 1
   os_type     = "cloud-init"
-  cores       = var.vm_controller_cores
+  cores       = var.controller_cores
   sockets     = 1
   cpu         = "host"
-  memory      = var.vm_controller_memory
+  memory      = var.controller_memory
   scsihw      = "virtio-scsi-pci"
   ipconfig0   = "ip=dhcp"
   ciuser      = var.vm_user
@@ -16,7 +16,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
   sshkeys     = var.ssh_publickey
   disk {
     slot    = 0
-    size    = var.vm_controller_disk_size
+    size    = var.controller_disk_size
     type    = "scsi"
     storage = var.pm_storage
   }
