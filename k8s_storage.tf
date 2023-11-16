@@ -41,7 +41,15 @@ resource "proxmox_vm_qemu" "k8s_storage" {
       "sed -i 's/\\n//g' /home/${var.vm_user}/.ssh/id_rsa", #remove this line if your private key is not on multiple lines
       "sudo chmod 600 /home/${var.vm_user}/.ssh/id_rsa",
 
-      
+      "sudo apt-get update", # update the apt cache
+      "sudo apt-get install -y nfs-kernel-server", # install the nfs server
+      "sudo mkdir -p /mnt/nfs_share", # create the nfs share folder
+      "sudo chown nobody:nogroup /mnt/nfs_share", # set the owner of the nfs share folder
+      "sudo chmod 777 /mnt/nfs_share", # set the permissions of the nfs share folder
+      "echo '/mnt/nfs_share *(rw,sync,no_subtree_check,no_root_squash)' | sudo tee -a /etc/exports", # add the nfs share to the exports file
+      "sudo exportfs -a", # export the nfs share
+      "sudo systemctl restart nfs-kernel-server", # restart the nfs server
+      "sudo systemctl enable nfs-kernel-server", # enable the nfs server to start on boot
     ]
   }
 
