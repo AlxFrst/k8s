@@ -30,7 +30,7 @@ resource "proxmox_vm_qemu" "k8s_node" {
     connection {
       type        = "ssh"
       user        = var.vm_user
-      password = var.vm_user
+      private_key = var.ssh_private_key
       host        = self.ssh_host
     }
     source      = "assets/nodeInstaller.sh"
@@ -41,7 +41,7 @@ resource "proxmox_vm_qemu" "k8s_node" {
     connection {
       type        = "ssh"
       user        = var.vm_user
-      password = var.vm_user
+      private_key = var.ssh_private_key
       host        = proxmox_vm_qemu.k8s_controller.0.ssh_host
     }
     source      = "/tmp/joinCommand.sh"
@@ -52,7 +52,7 @@ resource "proxmox_vm_qemu" "k8s_node" {
     connection {
       type        = "ssh"
       user        = var.vm_user
-      password = var.vm_user
+      private_key = var.ssh_private_key
       host        = self.ssh_host
     }
     inline = [

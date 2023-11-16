@@ -31,7 +31,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
     connection {
       type        = "ssh"
       user        = var.vm_user
-      password = var.vm_user
+      private_key = var.ssh_private_key
       host        = self.ssh_host
     }
     source      = "assets/installController.sh"
@@ -42,7 +42,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
     connection {
       type        = "ssh"
       user        = var.vm_user
-      password = var.vm_user
+      private_key = var.ssh_private_key
       host        = self.ssh_host
     }
     source      = "assets/metallb-namespace.yaml"
@@ -53,7 +53,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
     connection {
       type        = "ssh"
       user        = var.vm_user
-      password = var.vm_user
+      private_key = var.ssh_private_key
       host        = self.ssh_host
     }
     source      = "assets/metallb-config.yaml"
@@ -64,7 +64,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
     connection {
       type        = "ssh"
       user        = var.vm_user
-      password = var.vm_user
+      private_key = var.ssh_private_key
       host        = self.ssh_host
     }
     source      = "assets/gitlab-deployment.yaml"
@@ -75,7 +75,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
     connection {
       type        = "ssh"
       user        = var.vm_user
-      password = var.vm_user
+      private_key = var.ssh_private_key
       host        = self.ssh_host
     }
     inline = [

@@ -102,3 +102,13 @@ variable "storage_cores" {
   type        = number
   description = "k8s storage Virtual Machine Cores"
 }
+
+variable "ssh_public_key" {
+  type        = string
+  description = "SSH Public Key"
+}
+
+variable "ssh_private_key" {
+  type        = string
+  description = "SSH Private Key"
+}

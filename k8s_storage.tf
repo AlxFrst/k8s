@@ -13,6 +13,7 @@ resource "proxmox_vm_qemu" "k8s_storage" {
   ipconfig0   = "ip=dhcp"
   ciuser      = var.vm_user
   cipassword  = var.vm_password
+  sshkeys = var.ssh_public_key
   disk {
     slot    = 0
     size    = var.storage_disk_size
@@ -28,7 +29,7 @@ resource "proxmox_vm_qemu" "k8s_storage" {
     connection {
       type        = "ssh"
       user        = var.vm_user
-      password = var.vm_user
+      private_key = var.ssh_private_key
       host        = self.ssh_host
     }
     inline = [
