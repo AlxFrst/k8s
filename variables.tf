@@ -102,3 +102,18 @@ variable "gitlab_external_url" {
   type        = string
   description = "Gitlab External URL"
 }
+
+variable "storage_memory" {
+  type        = string
+  description = "k8s storage Virtual Machine Memory"
+}
+
+variable "storage_disk_size" {
+  type        = string
+  description = "k8s storage Virtual Machine Disk Size"
+}
+
+variable "storage_cores" {
+  type        = number
+  description = "k8s storage Virtual Machine Cores"
+}

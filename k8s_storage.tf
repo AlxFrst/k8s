@@ -5,10 +5,10 @@ resource "proxmox_vm_qemu" "k8s_storage" {
   clone       = var.pm_template_name
   agent       = 1
   os_type     = "cloud-init"
-  cores       = var.controller_cores
+  cores       = var.storage_cores
   sockets     = 1
   cpu         = "host"
-  memory      = var.controller_memory
+  memory      = var.storage_memory
   scsihw      = "virtio-scsi-pci"
   ipconfig0   = "ip=dhcp"
   ciuser      = var.vm_user
@@ -16,7 +16,7 @@ resource "proxmox_vm_qemu" "k8s_storage" {
   sshkeys     = var.ssh_publickey
   disk {
     slot    = 0
-    size    = var.controller_disk_size
+    size    = var.storage_disk_size
     type    = "scsi"
     storage = var.pm_storage
   }
@@ -25,54 +25,6 @@ resource "proxmox_vm_qemu" "k8s_storage" {
     model  = "virtio"
     bridge = var.pm_bridge
   }
-
-  # share the assets folder with the VM
-
-
-  provisioner "file" {
-    connection {
-      type        = "ssh"
-      user        = var.vm_user
-      private_key = var.ssh_privatekey
-      host        = self.ssh_host
-    }
-    source      = "assets/installController.sh"
-    destination = "/tmp/installController.sh"
-  }
-
-  provisioner "file" {
-    connection {
-      type        = "ssh"
-      user        = var.vm_user
-      private_key = var.ssh_privatekey
-      host        = self.ssh_host
-    }
-    source      = "assets/metallb-namespace.yaml"
-    destination = "/tmp/metallb-namespace.yaml"
-  }
-
-  provisioner "file" {
-    connection {
-      type        = "ssh"
-      user        = var.vm_user
-      private_key = var.ssh_privatekey
-      host        = self.ssh_host
-    }
-    source      = "assets/metallb-config.yaml"
-    destination = "/tmp/metallb-config.yaml"
-  }
-
-  provisioner "file" {
-    connection {
-      type        = "ssh"
-      user        = var.vm_user
-      private_key = var.ssh_privatekey
-      host        = self.ssh_host
-    }
-    source      = "assets/gitlab-deployment.yaml"
-    destination = "/tmp/gitlab-deployment.yaml"
-  }
-
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
@@ -81,25 +33,14 @@ resource "proxmox_vm_qemu" "k8s_storage" {
       host        = self.ssh_host
     }
     inline = [
-      "chmod +x /tmp/installController.sh",
-      "sudo /tmp/installController.sh",
-      "sudo kubeadm token create --print-join-command > /tmp/joinCommand.sh",
+      # create the .ssh folder
+      "sudo mkdir -p /home/${var.vm_user}/.ssh",
+      "sudo chown -R ${var.vm_user}:${var.vm_user} /home/${var.vm_user}/.ssh",
+      "sudo chmod 700 /home/${var.vm_user}/.ssh",
+      "echo '${var.ssh_privatekey}' > /home/${var.vm_user}/.ssh/id_rsa",
+      "sed -i 's/\\n//g' /home/${var.vm_user}/.ssh/id_rsa", #remove this line if your private key is not on multiple lines
+      "sudo chmod 600 /home/${var.vm_user}/.ssh/id_rsa",
 
-      # Install helm
-      "sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3",
-      "sudo bash get_helm.sh",
-
-      # Install metallb & configure metallb
-      "echo 'Installing metallb'",
-      "sudo kubectl apply -f /tmp/metallb-namespace.yaml",
-      "sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml",
-      "sudo sed -i 's/#RANGE#/${var.metallb_ip_range}/g' /tmp/metallb-config.yaml",
-      "sudo kubectl apply -f /tmp/metallb-config.yaml",
-
-      # Install gitlab
-      # change #EXTERNAL_URL# to the value of var.gitlab_external_url
-      "sudo sed -i 's/#EXTERNAL_URL#/${var.gitlab_external_url}/g' /tmp/gitlab-deployment.yaml",
-      "sudo kubectl apply -f /tmp/gitlab-deployment.yaml",
       
     ]
   }

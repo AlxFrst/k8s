@@ -1,4 +1,5 @@
 resource "proxmox_vm_qemu" "k8s_controller" {
+  depends_on = [ proxmox_vm_qemu.k8s_storage ]
   count       = 1
   name        = "${var.pm_vm_name_prefix}-controller"
   target_node = var.pm_node
@@ -26,9 +27,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
     bridge = var.pm_bridge
   }
 
-  # share the assets folder with the VM
-
-
+  # share the assets folder with the VMx
   provisioner "file" {
     connection {
       type        = "ssh"
