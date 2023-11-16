@@ -17,7 +17,7 @@ resource "proxmox_vm_qemu" "k8s_node" {
   sshkeys     = var.ssh_publickey
   disk {
     slot    = 0
-    size    = var.vnode_disk_size
+    size    = var.node_disk_size
     type    = "scsi"
     storage = var.pm_storage
   }

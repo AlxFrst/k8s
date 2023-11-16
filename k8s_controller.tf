@@ -93,13 +93,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "sudo kubectl apply -f /tmp/metallb-namespace.yaml",
       "sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml",
       "sudo sed -i 's/#RANGE#/${var.metallb_ip_range}/g' /tmp/metallb-config.yaml",
-      "sudo kubectl apply -f /tmp/metallb-config.yaml",
-
-      # Install gitlab
-      # change #EXTERNAL_URL# to the value of var.gitlab_external_url
-      "sudo sed -i 's/#EXTERNAL_URL#/${var.gitlab_external_url}/g' /tmp/gitlab-deployment.yaml",
-      "sudo kubectl apply -f /tmp/gitlab-deployment.yaml",
-      
+      "sudo kubectl apply -f /tmp/metallb-config.yaml",   
     ]
   }
 

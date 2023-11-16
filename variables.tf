@@ -68,7 +68,7 @@ variable "node_memory" {
   description = "k8s node Virtual Machine Memory"
 }
 
-variable "vnode_disk_size" {
+variable "node_disk_size" {
   type        = string
   description = "k8s node Virtual Machine Disk Size"
 }
@@ -96,11 +96,6 @@ variable "ssh_publickey" {
 variable "metallb_ip_range" {
   type        = string
   description = "MetalLB IP Range"
-}
-
-variable "gitlab_external_url" {
-  type        = string
-  description = "Gitlab External URL"
 }
 
 variable "storage_memory" {
