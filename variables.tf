@@ -82,3 +82,13 @@ variable "ssh_publickey" {
   type        = string
   description = "SSH User"
 }
+
+variable "metallb_ip_range" {
+  type        = string
+  description = "MetalLB IP Range"
+}
+
+variable "gitlab_external_url" {
+  type        = string
+  description = "Gitlab External URL"
+}
