@@ -53,6 +53,11 @@ variable "vm_controller_memory" {
   description = "k8s controller Virtual Machine Memory"
 }
 
+variable "vm_controller_disk_size" {
+  type        = string
+  description = "k8s controller Virtual Machine Disk Size"
+}
+
 variable "vm_node_count" {
   type        = number
   description = "k8s node Virtual Machine Count"
@@ -61,6 +66,11 @@ variable "vm_node_count" {
 variable "vm_node_memory" {
   type        = string
   description = "k8s node Virtual Machine Memory"
+}
+
+variable "vm_node_disk_size" {
+  type        = string
+  description = "k8s node Virtual Machine Disk Size"
 }
 
 variable "vm_user" {

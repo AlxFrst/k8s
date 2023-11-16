@@ -16,7 +16,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
   sshkeys     = var.ssh_publickey
   disk {
     slot    = 0
-    size    = "70G"
+    size    = var.vm_controller_disk_size
     type    = "scsi"
     storage = var.pm_storage
   }
