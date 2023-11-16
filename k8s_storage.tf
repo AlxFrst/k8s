@@ -13,7 +13,6 @@ resource "proxmox_vm_qemu" "k8s_storage" {
   ipconfig0   = "ip=dhcp"
   ciuser      = var.vm_user
   cipassword  = var.vm_password
-  sshkeys     = var.ssh_publickey
   disk {
     slot    = 0
     size    = var.storage_disk_size
@@ -29,18 +28,10 @@ resource "proxmox_vm_qemu" "k8s_storage" {
     connection {
       type        = "ssh"
       user        = var.vm_user
-      private_key = var.ssh_privatekey
+      password = var.vm_user
       host        = self.ssh_host
     }
     inline = [
-      # create the .ssh folder
-      "sudo mkdir -p /home/${var.vm_user}/.ssh",
-      "sudo chown -R ${var.vm_user}:${var.vm_user} /home/${var.vm_user}/.ssh",
-      "sudo chmod 700 /home/${var.vm_user}/.ssh",
-      "echo '${var.ssh_privatekey}' > /home/${var.vm_user}/.ssh/id_rsa",
-      "sed -i 's/\\n//g' /home/${var.vm_user}/.ssh/id_rsa", #remove this line if your private key is not on multiple lines
-      "sudo chmod 600 /home/${var.vm_user}/.ssh/id_rsa",
-
       "sudo apt-get update", # update the apt cache
       "sudo apt-get install -y nfs-kernel-server", # install the nfs server
       "sudo mkdir -p /mnt/nfs_share", # create the nfs share folder

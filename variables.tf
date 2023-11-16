@@ -83,16 +83,6 @@ variable "vm_password" {
   description = "Virtual Machine Password"
 }
 
-variable "ssh_privatekey" {
-  type        = string
-  description = "SSH User"
-}
-
-variable "ssh_publickey" {
-  type        = string
-  description = "SSH User"
-}
-
 variable "metallb_ip_range" {
   type        = string
   description = "MetalLB IP Range"
