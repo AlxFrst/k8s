@@ -14,6 +14,7 @@ resource "proxmox_vm_qemu" "k8s_node" {
   ipconfig0   = "ip=dhcp"
   ciuser      = var.vm_user
   cipassword  = var.vm_password
+    sshkeys = var.ssh_public_key
   disk {
     slot    = 0
     size    = var.node_disk_size
