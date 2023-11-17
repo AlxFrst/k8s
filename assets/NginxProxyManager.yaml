@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-proxy-manager
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-proxy-manager
+  template:
+    metadata:
+      labels:
+        app: nginx-proxy-manager
+    spec:
+      containers:
+      - name: nginx-proxy-manager
+        image: jc21/nginx-proxy-manager:latest
+        ports:
+        - containerPort: 80
+        - containerPort: 81
+        - containerPort: 443
+        volumeMounts:
+        - name: nfs-storage
+          mountPath: "/data"
+      volumes:
+      - name: nfs-storage
+        persistentVolumeClaim:
+          claimName: nfs-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-proxy-manager-service
+spec:
+  selector:
+    app: nginx-proxy-manager
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  - name: https
+    port: 443
+    targetPort: 443
+  - name: admin
+    port: 81
+    targetPort: 81
