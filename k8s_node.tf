@@ -57,13 +57,13 @@ resource "proxmox_vm_qemu" "k8s_node" {
       host        = self.ssh_host
     }
     inline = [
-      "echo 'Starting Node ${count.index + 1} Provisioner 🚀",
+      "echo 'Starting Node ${count.index + 1} Provisioner 🚀'",
       "chmod +x /tmp/nodeInstaller.sh",
       "sudo /tmp/nodeInstaller.sh",
   
       "sudo chmod +x /tmp/joinCommand.sh",
       "sudo /tmp/joinCommand.sh",
-      "echo 'Node ${count.index + 1} Provisioner Complete 🎉"
+      "echo 'Node ${count.index + 1} Provisioner Complete 🎉'"
     ]
   }
 }
