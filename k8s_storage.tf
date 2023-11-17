@@ -33,7 +33,7 @@ resource "proxmox_vm_qemu" "k8s_storage" {
       host        = self.ssh_host
     }
     inline = [
-      "sudo echo 'Starting Storage VM Provisioner 🚀",
+      "echo 'Starting Storage VM Provisioner 🚀",
       "sudo apt-get update", # update the apt cache
       "sudo apt-get install -y nfs-kernel-server", # install the nfs server
       "sudo mkdir -p /mnt/nfs_share", # create the nfs share folder
@@ -43,7 +43,7 @@ resource "proxmox_vm_qemu" "k8s_storage" {
       "sudo exportfs -a", # export the nfs share
       "sudo systemctl restart nfs-kernel-server", # restart the nfs server
       "sudo systemctl enable nfs-kernel-server", # enable the nfs server to start on boot
-      "sudo echo 'Storage VM Provisioner Complete 🎉"
+      "echo 'Storage VM Provisioner Complete 🎉"
     ]
   }
 
