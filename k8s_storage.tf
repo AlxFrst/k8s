@@ -13,7 +13,7 @@ resource "proxmox_vm_qemu" "k8s_storage" {
   ipconfig0   = "ip=dhcp"
   ciuser      = var.vm_user
   cipassword  = var.vm_password
-  sshkeys = var.ssh_public_key
+  sshkeys     = var.ssh_public_key
   disk {
     slot    = 0
     size    = var.storage_disk_size
@@ -34,17 +34,16 @@ resource "proxmox_vm_qemu" "k8s_storage" {
     }
     inline = [
       "echo 'Starting Storage VM Provisioner 🚀'",
-      "sudo apt-get update", # update the apt cache
-      "sudo apt-get install -y nfs-kernel-server", # install the nfs server
-      "sudo mkdir -p /mnt/nfs_share", # create the nfs share folder
-      "sudo chown nobody:nogroup /mnt/nfs_share", # set the owner of the nfs share folder
-      "sudo chmod 777 /mnt/nfs_share", # set the permissions of the nfs share folder
-      "echo '/mnt/nfs_share *(rw,sync,no_subtree_check,no_root_squash)' | sudo tee -a /etc/exports", # add the nfs share to the exports file
-      "sudo exportfs -a", # export the nfs share
-      "sudo systemctl restart nfs-kernel-server", # restart the nfs server
-      "sudo systemctl enable nfs-kernel-server", # enable the nfs server to start on boot
+      "until sudo apt-get update; do echo 'apt-get update failed, retrying...'; sleep 5; done",
+      "until sudo apt-get install -y nfs-kernel-server; do echo 'nfs-kernel-server installation failed, retrying...'; sleep 5; done",
+      "sudo mkdir -p /mnt/nfs_share",
+      "sudo chown nobody:nogroup /mnt/nfs_share",
+      "sudo chmod 777 /mnt/nfs_share",
+      "echo '/mnt/nfs_share *(rw,sync,no_subtree_check,no_root_squash)' | sudo tee -a /etc/exports",
+      "sudo exportfs -a",
+      "sudo systemctl restart nfs-kernel-server",
+      "sudo systemctl enable nfs-kernel-server",
       "echo 'Storage VM Provisioner Complete 🎉'",
     ]
   }
-
 }
