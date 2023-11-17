@@ -38,17 +38,6 @@ resource "proxmox_vm_qemu" "k8s_node" {
     destination = "/tmp/nodeInstaller.sh"
   }
 
-  provisioner "file" {
-    connection {
-      type        = "ssh"
-      user        = var.vm_user
-      private_key = var.ssh_private_key
-      host        = proxmox_vm_qemu.k8s_controller.0.ssh_host
-    }
-    source      = "/tmp/joinCommand.sh"
-    destination = "/tmp/joinCommand.sh"
-  }
-
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
@@ -61,9 +50,23 @@ resource "proxmox_vm_qemu" "k8s_node" {
       "chmod +x /tmp/nodeInstaller.sh",
       "sudo /tmp/nodeInstaller.sh",
   
+      # create the .ssh folder
+      "sudo mkdir -p /home/${var.vm_user}/.ssh",
+      "sudo chown -R ${var.vm_user}:${var.vm_user} /home/${var.vm_user}/.ssh",
+      "sudo chmod 700 /home/${var.vm_user}/.ssh",
+      "echo '${var.ssh_private_key}' > /home/${var.vm_user}/.ssh/id_rsa",
+      "sed -i 's/\\n//g' /home/${var.vm_user}/.ssh/id_rsa", #remove this line if your private key is not on multiple lines
+      "sudo chmod 600 /home/${var.vm_user}/.ssh/id_rsa",
+  
+      # copy the join command from the controller to the node and execute it
+      "scp -o StrictHostKeyChecking=no -i /home/${var.vm_user}/.ssh/id_rsa ${var.vm_user}@${proxmox_vm_qemu.k8s_controller.0.ssh_host}:/tmp/joinCommand.sh /tmp/joinCommand.sh",
       "sudo chmod +x /tmp/joinCommand.sh",
       "sudo /tmp/joinCommand.sh",
-      "echo 'Node ${count.index + 1} Provisioner Complete 🎉'"
+
+      # remove ssh key from the node
+      "sudo rm /home/${var.vm_user}/.ssh/id_rsa",
+      "echo 'Node ${count.index + 1} Provisioner Complete 🎉'",
+
     ]
   }
 }
