@@ -80,7 +80,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       host        = self.ssh_host
     }
     inline = [
-      "echo 'Starting Controller VM Provisioner 🚀",
+      "echo 'Starting Controller VM Provisioner 🚀'",
       "chmod +x /tmp/installController.sh",
       "sudo /tmp/installController.sh",
       "sudo kubeadm token create --print-join-command > /tmp/joinCommand.sh",
@@ -98,7 +98,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "sudo sed -i 's/#RANGE#/${var.metallb_ip_range}/g' /tmp/metallb-config.yaml",
       "sudo kubectl apply -f /tmp/metallb-config.yaml",
       "echo 'metallb installed'",
-      "echo 'Controller VM Provisioner Complete 🎉",
+      "echo 'Controller VM Provisioner Complete 🎉'",
 
       # Install Kompose
       "echo 'Installing Kompose'",
