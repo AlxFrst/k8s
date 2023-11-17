@@ -8,5 +8,5 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path: "/nfs-share"
+    path: "/mnt/nfs-share"
     server: #NFS_SERVER_IP#

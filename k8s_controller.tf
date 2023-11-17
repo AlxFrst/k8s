@@ -113,6 +113,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "echo 'Controller VM Provisioner Complete 🎉'",
 
       # Initialize the nfs-pv
+      "sudo apt install nfs-common -y",
       "sudo sed -i 's/#NFS_SERVER_IP#/${proxmox_vm_qemu.k8s_storage.0.ssh_host}/g' /tmp/nfs-pv.yaml",
       "sudo sed -i 's/#NFS_SERVER_STORAGESIZE#/${var.storage_disk_size}i/g' /tmp/nfs-pv.yaml",
       "sudo sed -i 's/#NFS_SERVER_STORAGESIZE#/${var.storage_disk_size}i/g' /tmp/nfs-pvc.yaml",
