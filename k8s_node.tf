@@ -49,6 +49,7 @@ resource "proxmox_vm_qemu" "k8s_node" {
       "echo 'Starting Node ${count.index + 1} Provisioner 🚀'",
       "chmod +x /tmp/nodeInstaller.sh",
       "sudo /tmp/nodeInstaller.sh",
+      "sudo apt install -y nfs-common",
   
       # create the .ssh folder
       "sudo mkdir -p /home/${var.vm_user}/.ssh",
