@@ -1,8 +1,8 @@
 # Proxmox variables
-pm_node          = "proxmox"
-pm_token_id      = "root@pam!xxxxxxx"
-pm_token_secret  = "xxxxxxxxxxxxxxxxxxxxxx"
-pm_api_url       = "https://xxxxxxxxxxxxxxxx/api2/json"
+pm_node          = "NodeName"
+pm_token_id      = "root@pam!terraform"
+pm_token_secret  = "xxxxxxxxxxxxx"
+pm_api_url       = "http://xxxxxxxx/api2/json"
 pm_template_name = "ubuntu-2004-cloudinit"
 pm_storage       = "local-lvm"
 pm_bridge        = "vmbr0"
@@ -11,16 +11,23 @@ pm_bridge        = "vmbr0"
 pm_vm_name_prefix  = "k8s"
 vm_user     = "ubuntu"
 vm_password = "ubuntu"
+metallb_ip_range = "192.168.1.240-192.168.1.250"
 
 # Controller variables
 controller_memory = "6144" # 2048MB this is the minimum required for k8s controller
 controller_cores  = "3"    # 2 cores this is the minimum required for k8s controller
+controller_disk_size  = "30G"   # 20GB this is the minimum required for k8s controller
 
 # Worker variables
 node_count  = "4"
 node_memory = "6144"
 node_cores  = "3"
+node_disk_size  = "30G"
 
-# Credentials
-ssh_publickey  = "A GENERATED PUBLIC KEY"
-ssh_privatekey = "A GENERATED PRIVATE KEY"
+# Storage variables
+storage_memory = "2048"
+storage_cores  = "2"
+storage_disk_size  = "30G"
+
+ssh_public_key  = ""
+ssh_private_key = "" # Make it in one line using \n for new line
