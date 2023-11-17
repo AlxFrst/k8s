@@ -86,8 +86,10 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "sudo kubeadm token create --print-join-command > /tmp/joinCommand.sh",
 
       # Install helm
+      "echo 'Installing Helm'",
       "sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3",
       "sudo bash get_helm.sh",
+      "echo 'Helm installed'",
 
       # Install metallb & configure metallb
       "echo 'Installing metallb'",
@@ -96,7 +98,14 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "sudo sed -i 's/#RANGE#/${var.metallb_ip_range}/g' /tmp/metallb-config.yaml",
       "sudo kubectl apply -f /tmp/metallb-config.yaml",
       "echo 'metallb installed'",
-      "echo 'Controller VM Provisioner Complete 🎉",   
+      "echo 'Controller VM Provisioner Complete 🎉",
+
+      # Install Kompose
+      "echo 'Installing Kompose'",
+      "sudo curl -L https://github.com/kubernetes/kompose/releases/download/v1.31.2/kompose-linux-amd64 -o kompose",
+      "sudo chmod +x kompose",
+      "sudo mv ./kompose /usr/local/bin/kompose",
+      "echo 'Kompose installed'",
     ]
   }
 }
