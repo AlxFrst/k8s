@@ -128,6 +128,7 @@ terraform apply -var-file="configurations/prod.tfvars"
 - For my cloud-init template i only tested with ubuntu 20.04 and 18.04, if you want to use another version of ubuntu, it may not work, so i recommend using one of these two versions.
 - Your SSH private key must be in one line, so you can remove the line break with \n and use it"
 - Please be sure your cloud-init template in Proxmox didn't have a CPU limit, if you have a CPU limit, the deployment will fail.
+- I add NginxProxyManager.yaml in assets folder, so you can see how to create a new instance to work with the nfs server.
 
 
 ### 📝 Time to deploy
