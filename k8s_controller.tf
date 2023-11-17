@@ -46,17 +46,6 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       private_key = var.ssh_private_key
       host        = self.ssh_host
     }
-    source      = "assets/metallb-namespace.yaml"
-    destination = "/tmp/metallb-namespace.yaml"
-  }
-
-  provisioner "file" {
-    connection {
-      type        = "ssh"
-      user        = var.vm_user
-      private_key = var.ssh_private_key
-      host        = self.ssh_host
-    }
     source      = "assets/metallb-config.yaml"
     destination = "/tmp/metallb-config.yaml"
   }
@@ -116,8 +105,8 @@ resource "proxmox_vm_qemu" "k8s_controller" {
 
       # Install metallb & configure metallb
       "echo 'Installing metallb'",
-      "sudo kubectl apply -f /tmp/metallb-namespace.yaml",
-      "sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml",
+      "sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/namespace.yaml",
+      "sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/metallb.yaml",
       "sudo sed -i 's/#RANGE#/${var.metallb_ip_range}/g' /tmp/metallb-config.yaml",
       "sudo kubectl apply -f /tmp/metallb-config.yaml",
       "echo 'metallb installed'",
