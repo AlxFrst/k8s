@@ -72,6 +72,28 @@ resource "proxmox_vm_qemu" "k8s_controller" {
     destination = "/tmp/gitlab-deployment.yaml"
   }
 
+    provisioner "file" {
+    connection {
+      type        = "ssh"
+      user        = var.vm_user
+      private_key = var.ssh_private_key
+      host        = self.ssh_host
+    }
+    source      = "assets/nfs-pv.yaml"
+    destination = "/tmp/nfs-pv.yaml"
+  }
+
+    provisioner "file" {
+    connection {
+      type        = "ssh"
+      user        = var.vm_user
+      private_key = var.ssh_private_key
+      host        = self.ssh_host
+    }
+    source      = "assets/nfs-pvc.yaml"
+    destination = "/tmp/nfs-pvc.yaml"
+  }
+
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
@@ -89,6 +111,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "echo 'Installing Helm'",
       "sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3",
       "sudo bash get_helm.sh",
+      "sudo rm get_helm.sh",
       "echo 'Helm installed'",
 
       # Install metallb & configure metallb
@@ -99,6 +122,15 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "sudo kubectl apply -f /tmp/metallb-config.yaml",
       "echo 'metallb installed'",
       "echo 'Controller VM Provisioner Complete 🎉'",
+
+      # Initialize the nfs-pv
+      "sudo sed -i 's/#NFS_SERVER_IP#/${proxmox_vm_qemu.k8s_storage.0.ssh_host}/g' /tmp/nfs-pv.yaml",
+      "sudo sed -i 's/#NFS_SERVER_STORAGESIZE#/${var.storage_disk_size}i/g' /tmp/nfs-pv.yaml",
+      "sudo sed -i 's/#NFS_SERVER_STORAGESIZE#/${var.storage_disk_size}i/g' /tmp/nfs-pvc.yaml",
+      sudo sed -i 's/#NFS_SERVER_STORAGESIZE#/30Gi/g' /tmp/nfs-pvc.yaml
+
+
+
 
       # Install Kompose
       "echo 'Installing Kompose'",
