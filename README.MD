@@ -33,6 +33,9 @@ The project is focused on provisioning and configuring Kubernetes controller and
 
 ---
 
+## 📚 TODO
+- [ ] Add output for the IP of the controller node and others informations
+
 ## ⚙️ Features
 
 | Feature                | Description                           |
