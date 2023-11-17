@@ -93,6 +93,8 @@ Before you begin, ensure that you have the following prerequisites installed:
 > - `Ubuntu template for proxmox (20.04)` - [Download & Install Ubuntu template for proxmox](https://pve.proxmox.com/wiki/Downloads).<br>
 
 
+
+
 ### 📦 Installation
 
 1. Clone the k8s repository:
@@ -117,6 +119,16 @@ terraform init
 ```sh
 terraform apply -var-file="configurations/prod.tfvars"
 ```
+
+### 📝 Testing and Troubleshooting
+- For my cloud-init template i only tested with ubuntu 20.04 and 18.04, if you want to use another version of ubuntu, it may not work, so i recommend using one of these two versions.
+- Your SSH private key must be in one line, so you can remove the line break with \n and use it"
+- Please be sure your cloud-init template in Proxmox didn't have a CPU limit, if you have a CPU limit, the deployment will fail.
+
+
+### 📝 Time to deploy
+
+In my case, the deployment took about 13 minutes on my proxmox server with 128GB of RAM and 32 cores, this time may vary depending on your server's resources.
 
 ---
 
