@@ -103,15 +103,6 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "sudo rm get_helm.sh",
       "echo 'Helm installed'",
 
-      # Install metallb & configure metallb
-      "echo 'Installing metallb'",
-      "sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/namespace.yaml",
-      "sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/metallb.yaml",
-      "sudo sed -i 's/#RANGE#/${var.metallb_ip_range}/g' /tmp/metallb-config.yaml",
-      "sudo kubectl apply -f /tmp/metallb-config.yaml",
-      "echo 'metallb installed'",
-      "echo 'Controller VM Provisioner Complete 🎉'",
-
       # Initialize the nfs-pv
       "sudo apt install nfs-common -y",
       "sudo sed -i 's/#NFS_SERVER_IP#/${proxmox_vm_qemu.k8s_storage.0.ssh_host}/g' /tmp/nfs-pv.yaml",
@@ -126,6 +117,15 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "sudo chmod +x kompose",
       "sudo mv ./kompose /usr/local/bin/kompose",
       "echo 'Kompose installed'",
+      
+      # Install metallb & configure metallb
+      "echo 'Installing metallb'",
+      "sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml",
+      "sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml",
+      "sudo sed -i 's/#RANGE#/${var.metallb_ip_range}/g' /tmp/metallb-config.yaml",
+      "sudo kubectl apply -f /tmp/metallb-config.yaml",
+      "echo 'metallb installed'",
+      "echo 'Controller VM Provisioner Complete 🎉'",
     ]
   }
 }
