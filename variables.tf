@@ -97,6 +97,10 @@ variable "storage_disk_size" {
   type        = string
   description = "k8s storage Virtual Machine Disk Size"
 }
+variable "storage_disk_size_session" {
+  type        = string
+  description = "k8s storage Virtual Machine Disk Size for session iTop"
+}
 
 variable "storage_cores" {
   type        = number

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-pvc-session
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: #NFS_SERVER_STORAGESIZE_SESSION#

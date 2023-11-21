@@ -28,6 +28,7 @@ node_disk_size  = "30G"
 storage_memory = "1024"
 storage_cores  = "1"
 storage_disk_size  = "100G"
+storage_disk_size_session  = "3G"
 
 # Database variables
 database_count  = "1"

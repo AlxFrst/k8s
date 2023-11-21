@@ -36,7 +36,7 @@ spec:
                 - itop
             topologyKey: "kubernetes.io/hostname"
       containers:
-        - image: rbaete/itop-itop:latest
+        - image: rbaete/itop:latest
           name: itop
           ports:
             - containerPort: 80
@@ -46,11 +46,16 @@ spec:
           volumeMounts:
             - mountPath: /var/www/html
               name: nfs-storage
+            - mountPath: /tmp/session_itop
+              name: nfs-storage-session
       restartPolicy: Always
       volumes:
         - name: nfs-storage
           persistentVolumeClaim:
             claimName: nfs-pvc
+        - name: nfs-storage-session
+          persistentVolumeClaim:
+            claimName: nfs-pvc-session
 status: {}
 
 ---

@@ -106,10 +106,15 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       # Initialize the nfs-pv
       "sudo apt install nfs-common -y",
       "sudo sed -i 's/#NFS_SERVER_IP#/${proxmox_vm_qemu.k8s_storage.0.ssh_host}/g' /tmp/nfs-pv.yaml",
+      "sudo sed -i 's/#NFS_SERVER_IP#/${proxmox_vm_qemu.k8s_storage.0.ssh_host}/g' /tmp/nfs-session-itop-pv.yaml",
       "sudo sed -i 's/#NFS_SERVER_STORAGESIZE#/${var.storage_disk_size}i/g' /tmp/nfs-pv.yaml",
       "sudo sed -i 's/#NFS_SERVER_STORAGESIZE#/${var.storage_disk_size}i/g' /tmp/nfs-pvc.yaml",
+      "sudo sed -i 's/#NFS_SERVER_STORAGESIZE_SESSION#/${var.storage_disk_size_session}i/g' /tmp/nfs-session-itop-pv.yaml",
+      "sudo sed -i 's/#NFS_SERVER_STORAGESIZE_SESSION#/${var.storage_disk_size_session}i/g' /tmp/nfs-session-itop-pvc.yaml",
       "sudo kubectl apply -f /tmp/nfs-pv.yaml",
       "sudo kubectl apply -f /tmp/nfs-pvc.yaml",
+      "sudo kubectl apply -f /tmp/nfs-session-itop-pv.yaml",
+      "sudo kubectl apply -f /tmp/nfs-session-itop-pvc.yaml",
 
       # Install Kompose
       "echo 'Installing Kompose'",
