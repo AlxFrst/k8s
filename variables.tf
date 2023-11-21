@@ -131,5 +131,14 @@ variable "database_cores" {
 variable "database_disk_size" {
   type        = string
   description = "k8s database Virtual Machine Disk Size"
-  
+}
+
+variable "database_user" {
+  type        = string
+  description = "k8s database user"
+}
+
+variable "database_password" {
+  type        = string
+  description = "k8s database password"
 }
