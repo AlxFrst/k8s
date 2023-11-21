@@ -45,9 +45,14 @@ resource "proxmox_vm_qemu" "k8s_database" {
     "sudo systemctl restart mysql",
 
     // Configurer un nouvel utilisateur MySQL
+    "echo 'Creating MySQL user'",
     "sudo mysql -e \"CREATE USER '${var.database_user}'@'%' IDENTIFIED BY '${var.database_password}';\"",
+    "echo 'Granting privileges to MySQL user'",
     "sudo mysql -e \"GRANT ALL PRIVILEGES ON *.* TO '${var.database_user}'@'%' WITH GRANT OPTION;\"",
+    "echo 'Flushing privileges'",
     "sudo mysql -e \"FLUSH PRIVILEGES;\"",
+    "echo 'MySQL user created'",
+    "echo 'Database VM Provisioner Complete 🎉'",
     ]
   }
 }
