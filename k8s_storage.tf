@@ -39,7 +39,7 @@ resource "proxmox_vm_qemu" "k8s_storage" {
       "sudo mkdir -p /mnt/nfs-share",
       "sudo chown nobody:nogroup /mnt/nfs-share",
       "sudo chmod 777 /mnt/nfs-share",
-      "echo '/mnt/nfs-share 192.168.1.0/24(rw,sync,no_subtree_check, no_root_squash)' | sudo tee -a /etc/exports",
+      "echo '/mnt/nfs-share 192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash)' | sudo tee -a /etc/exports",
       "sudo exportfs -a",
       "sudo systemctl restart nfs-kernel-server",
       "sudo systemctl enable nfs-kernel-server",
