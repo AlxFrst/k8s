@@ -112,3 +112,24 @@ variable "ssh_private_key" {
   type        = string
   description = "SSH Private Key"
 }
+
+variable "database_count" {
+  type        = number
+  description = "k8s database Virtual Machine Count"
+}
+
+variable "database_memory" {
+  type        = string
+  description = "k8s database Virtual Machine Memory"
+}
+
+variable "database_cores" {
+  type        = number
+  description = "k8s database Virtual Machine Cores"
+}
+
+variable "database_disk_size" {
+  type        = string
+  description = "k8s database Virtual Machine Disk Size"
+  
+}

@@ -14,20 +14,28 @@ vm_password = "ubuntu"
 metallb_ip_range = "192.168.1.240-192.168.1.250"
 
 # Controller variables
-controller_memory = "6144" # 2048MB this is the minimum required for k8s controller
-controller_cores  = "3"    # 2 cores this is the minimum required for k8s controller
+controller_memory = "4096" # 2048MB this is the minimum required for k8s controller
+controller_cores  = "2"    # 2 cores this is the minimum required for k8s controller
 controller_disk_size  = "30G"   # 20GB this is the minimum required for k8s controller
 
 # Worker variables
 node_count  = "4"
-node_memory = "6144"
-node_cores  = "3"
+node_memory = "4069"
+node_cores  = "2"
 node_disk_size  = "30G"
 
 # Storage variables
-storage_memory = "2048"
-storage_cores  = "2"
-storage_disk_size  = "30G"
+storage_memory = "1024"
+storage_cores  = "1"
+storage_disk_size  = "100G"
+
+# Database variables
+database_count  = "1"
+database_memory = "2048"
+database_cores  = "1"
+database_disk_size  = "30G"
+database_user = "admin"
+database_password = "admin"
 
 ssh_public_key  = ""
 ssh_private_key = "" # Make it in one line using \n for new line
