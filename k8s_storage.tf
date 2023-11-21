@@ -1,5 +1,4 @@
 resource "proxmox_vm_qemu" "k8s_storage" {
-    depends_on = [ proxmox_vm_qemu.k8s_database ]
   count       = 1
   name        = "${var.pm_vm_name_prefix}-storage"
   target_node = var.pm_node
@@ -15,6 +14,7 @@ resource "proxmox_vm_qemu" "k8s_storage" {
   ciuser      = var.vm_user
   cipassword  = var.vm_password
   sshkeys     = var.ssh_public_key
+  qemu_os     = "l26"
   disk {
     slot    = 0
     size    = var.storage_disk_size

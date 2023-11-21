@@ -1,5 +1,5 @@
 resource "proxmox_vm_qemu" "k8s_controller" {
-  depends_on = [ proxmox_vm_qemu.k8s_storage ]
+  depends_on  = [proxmox_vm_qemu.k8s_storage]
   count       = 1
   name        = "${var.pm_vm_name_prefix}-controller"
   target_node = var.pm_node
@@ -14,7 +14,8 @@ resource "proxmox_vm_qemu" "k8s_controller" {
   ipconfig0   = "ip=dhcp"
   ciuser      = var.vm_user
   cipassword  = var.vm_password
-    sshkeys = var.ssh_public_key
+  sshkeys     = var.ssh_public_key
+  qemu_os     = "l26"
   disk {
     slot    = 0
     size    = var.controller_disk_size
@@ -61,7 +62,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
     destination = "/tmp/gitlab-deployment.yaml"
   }
 
-    provisioner "file" {
+  provisioner "file" {
     connection {
       type        = "ssh"
       user        = var.vm_user
@@ -72,7 +73,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
     destination = "/tmp/nfs-pv.yaml"
   }
 
-    provisioner "file" {
+  provisioner "file" {
     connection {
       type        = "ssh"
       user        = var.vm_user
@@ -117,7 +118,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "sudo chmod +x kompose",
       "sudo mv ./kompose /usr/local/bin/kompose",
       "echo 'Kompose installed'",
-      
+
       # Install metallb & configure metallb
       "echo 'Installing metallb'",
       "sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml",
