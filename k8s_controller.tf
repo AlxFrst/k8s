@@ -133,7 +133,6 @@ resource "proxmox_vm_qemu" "k8s_controller" {
 
       # Store files in the VM
       "sudo mkdir -p /home/${var.vm_user}/clusterFiles",
-      "sudo mv /tmp/joinCommand.sh /home/${var.vm_user}/clusterFiles/joinCommand.sh",
       "sudo mv /tmp/metallb-config.yaml /home/${var.vm_user}/clusterFiles/metallb-config.yaml",
       "sudo mkdir -p /home/${var.vm_user}/clusterApps",
       "sudo mv /tmp/gitlab-deployment.yaml /home/${var.vm_user}/clusterApps/gitlab-deployment.yaml",
