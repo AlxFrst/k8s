@@ -62,6 +62,28 @@ resource "proxmox_vm_qemu" "k8s_controller" {
     destination = "/tmp/gitlab-deployment.yaml"
   }
 
+    provisioner "file" {
+    connection {
+      type        = "ssh"
+      user        = var.vm_user
+      private_key = var.ssh_private_key
+      host        = self.ssh_host
+    }
+    source      = "assets/itop.yaml"
+    destination = "/tmp/itop.yaml"
+  }
+
+    provisioner "file" {
+    connection {
+      type        = "ssh"
+      user        = var.vm_user
+      private_key = var.ssh_private_key
+      host        = self.ssh_host
+    }
+    source      = "assets/babybuddy.yaml"
+    destination = "/tmp/babybuddy.yaml"
+  }
+
   provisioner "file" {
     connection {
       type        = "ssh"
@@ -127,6 +149,17 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "sudo kubectl apply -f /tmp/metallb-config.yaml",
       "echo 'metallb installed'",
       "echo 'Controller VM Provisioner Complete 🎉'",
+
+      # Store files in the VM
+      "sudo mkdir -p /home/${var.vm_user}/clusterFiles",
+      "sudo mv /tmp/joinCommand.sh /home/${var.vm_user}/clusterFiles/joinCommand.sh",
+      "sudo mv /tmp/metallb-config.yaml /home/${var.vm_user}/clusterFiles/metallb-config.yaml",
+      "sudo mv /tmp/nfs-pv.yaml /home/${var.vm_user}/clusterFiles/nfs-pv.yaml",
+      "sudo mv /tmp/nfs-pvc.yaml /home/${var.vm_user}/clusterFiles/nfs-pvc.yaml",
+      "sudo mkdir -p /home/${var.vm_user}/clusterApps",
+      "sudo mv /tmp/gitlab-deployment.yaml /home/${var.vm_user}/clusterApps/gitlab-deployment.yaml",
+      "sudo mv /tmp/itop.yaml /home/${var.vm_user}/clusterApps/itop.yaml",
+      "sudo mv /tmp/babybuddy.yaml /home/${var.vm_user}/clusterApps/babybuddy.yaml",
     ]
   }
 }
