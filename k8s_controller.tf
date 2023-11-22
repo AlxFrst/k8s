@@ -84,26 +84,15 @@ resource "proxmox_vm_qemu" "k8s_controller" {
     destination = "/tmp/babybuddy.yaml"
   }
 
-  provisioner "file" {
+      provisioner "file" {
     connection {
       type        = "ssh"
       user        = var.vm_user
       private_key = var.ssh_private_key
       host        = self.ssh_host
     }
-    source      = "assets/nfs-pv.yaml"
-    destination = "/tmp/nfs-pv.yaml"
-  }
-
-  provisioner "file" {
-    connection {
-      type        = "ssh"
-      user        = var.vm_user
-      private_key = var.ssh_private_key
-      host        = self.ssh_host
-    }
-    source      = "assets/nfs-pvc.yaml"
-    destination = "/tmp/nfs-pvc.yaml"
+    source      = "assets/mysql.yaml"
+    destination = "/tmp/mysql.yaml"
   }
 
   provisioner "remote-exec" {
@@ -126,14 +115,6 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "sudo rm get_helm.sh",
       "echo 'Helm installed'",
 
-      # Initialize the nfs-pv
-      "sudo apt install nfs-common -y",
-      "sudo sed -i 's/#NFS_SERVER_IP#/${proxmox_vm_qemu.k8s_storage.0.ssh_host}/g' /tmp/nfs-pv.yaml",
-      "sudo sed -i 's/#NFS_SERVER_STORAGESIZE#/${var.storage_disk_size}i/g' /tmp/nfs-pv.yaml",
-      "sudo sed -i 's/#NFS_SERVER_STORAGESIZE#/${var.storage_disk_size}i/g' /tmp/nfs-pvc.yaml",
-      "sudo kubectl apply -f /tmp/nfs-pv.yaml",
-      "sudo kubectl apply -f /tmp/nfs-pvc.yaml",
-
       # Install Kompose
       "echo 'Installing Kompose'",
       "sudo curl -L https://github.com/kubernetes/kompose/releases/download/v1.31.2/kompose-linux-amd64 -o kompose",
@@ -154,12 +135,17 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "sudo mkdir -p /home/${var.vm_user}/clusterFiles",
       "sudo mv /tmp/joinCommand.sh /home/${var.vm_user}/clusterFiles/joinCommand.sh",
       "sudo mv /tmp/metallb-config.yaml /home/${var.vm_user}/clusterFiles/metallb-config.yaml",
-      "sudo mv /tmp/nfs-pv.yaml /home/${var.vm_user}/clusterFiles/nfs-pv.yaml",
-      "sudo mv /tmp/nfs-pvc.yaml /home/${var.vm_user}/clusterFiles/nfs-pvc.yaml",
       "sudo mkdir -p /home/${var.vm_user}/clusterApps",
       "sudo mv /tmp/gitlab-deployment.yaml /home/${var.vm_user}/clusterApps/gitlab-deployment.yaml",
       "sudo mv /tmp/itop.yaml /home/${var.vm_user}/clusterApps/itop.yaml",
       "sudo mv /tmp/babybuddy.yaml /home/${var.vm_user}/clusterApps/babybuddy.yaml",
+      "sudo mv /tmp/mysql.yaml /home/${var.vm_user}/clusterApps/mysql.yaml",
+
+      # Deploy apps
+      "sudo sed -i 's/#NFS_SERVER_IP#/${proxmox_vm_qemu.k8s_storage.0.ssh_host}/g' /home/${var.vm_user}/clusterApps/mysql.yaml",
+      "sudo kubectl apply -f /home/${var.vm_user}/clusterApps/mysql.yaml",
+    
     ]
   }
 }
+
