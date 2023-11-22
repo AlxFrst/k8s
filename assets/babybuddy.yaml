@@ -43,7 +43,7 @@ spec:
               protocol: TCP
           resources: {}
           volumeMounts:
-            - mountPath: /babybuddy
+            - mountPath: /config
               name: nfs-storage
       restartPolicy: Always
       volumes:
