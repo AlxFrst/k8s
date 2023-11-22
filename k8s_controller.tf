@@ -142,7 +142,7 @@ resource "proxmox_vm_qemu" "k8s_controller" {
 
       # Deploy apps
       "sudo sed -i 's/#NFS_SERVER_IP#/${proxmox_vm_qemu.k8s_storage.0.ssh_host}/g' /home/${var.vm_user}/clusterApps/mysql.yaml",
-      "sudo kubectl apply -f /home/${var.vm_user}/clusterApps/mysql.yaml",
+      # "sudo kubectl apply -f /home/${var.vm_user}/clusterApps/mysql.yaml",
     
     ]
   }
