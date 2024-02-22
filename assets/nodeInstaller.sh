@@ -24,7 +24,17 @@ echo "127.0.1.1 $HOSTNAME" | sudo tee -a /etc/hosts
 echo "✅ Génération d'un nom d'hôte aléatoire $HOSTNAME"
 
 # Installation des dépendances
-sudo apt install -y docker.io
+sudo apt install  -y containerd apt-transport-https software-properties-common
+sudo systemctl enable docker
+sudo systemctl start docker
+
+sudo modprobe br_netfilter
+echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
+
+sudo apt install -y apt-transport-https curl
+
+sudo rm /etc/containerd/config.toml
+sudo systemctl restart containerd
 
 # Installation de kubeadm, kubelet et kubectl (si ce n'est pas déjà fait)
 # kubelet est nécessaire pour rejoindre le cluster.
