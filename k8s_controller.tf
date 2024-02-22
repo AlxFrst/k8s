@@ -124,7 +124,6 @@ resource "proxmox_vm_qemu" "k8s_controller" {
 
       # Install metallb & configure metallb
       "echo 'Installing metallb'",
-      "sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml",
       "sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml",
       "sudo sed -i 's/#RANGE#/${var.metallb_ip_range}/g' /tmp/metallb-config.yaml",
       "sudo kubectl apply -f /tmp/metallb-config.yaml",
@@ -139,10 +138,6 @@ resource "proxmox_vm_qemu" "k8s_controller" {
       "sudo mv /tmp/itop.yaml /home/${var.vm_user}/clusterApps/itop.yaml",
       "sudo mv /tmp/babybuddy.yaml /home/${var.vm_user}/clusterApps/babybuddy.yaml",
       "sudo mv /tmp/mysql.yaml /home/${var.vm_user}/clusterApps/mysql.yaml",
-
-      # Deploy apps
-      "sudo sed -i 's/#NFS_SERVER_IP#/${proxmox_vm_qemu.k8s_storage.0.ssh_host}/g' /home/${var.vm_user}/clusterApps/mysql.yaml",
-      # "sudo kubectl apply -f /home/${var.vm_user}/clusterApps/mysql.yaml",
     
     ]
   }
